@@ -10,8 +10,6 @@ const fetchProducts = async (product) => {
   }
 };
 
-window.onload = () => fetchProducts('computador');
-
 if (typeof module !== 'undefined') {
   module.exports = {
     fetchProducts,
