@@ -17,4 +17,20 @@ describe('1 - Teste a função fecthProducts', () => {
     await fetchProducts('computador');
     expect(fetch).toHaveBeenCalledWith(endPoint);
   });
+  it('Testa se a função retorna o endPoint Correto', async () => {
+    expect.assertions(1);
+    const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=relogio';
+    await fetchProducts('relogio');
+    expect(fetch).toHaveBeenCalledWith(endPoint);
+  });
+  it('Testa se o retorno da função tem a estrutura de dados igual ao objeto computadorSearch', async () => {
+    expect.assertions(1);
+    const result = await fetchProducts('computador');
+    expect(result).toEqual(computadorSearch)
+  });
+  it('Testa se ao chamar a função sem argumento, retorna o erro', async () => {
+    expect.assertions(1);
+    const result = await fetchProducts();
+    expect(result).toEqual(new Error('You must provide an url'));
+  });
 });
