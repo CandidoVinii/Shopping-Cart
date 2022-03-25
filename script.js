@@ -43,7 +43,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 const callFetch = async () => {
   const items = document.querySelector('.items');
   const call = await fetchProducts('computador');
-  call.forEach((obj) => {
+  call.results.forEach((obj) => {
     const catchInfo = {
       sku: obj.id,
       name: obj.title,
