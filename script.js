@@ -74,10 +74,11 @@ const button = document.querySelector('.empty-cart');
 const emptyCart = () => {
   const allItems = document.querySelectorAll('li');
   const cartIems = document.querySelector('ol');
-  for(let i = 0; i < allItems.length; i += 1){
+  for (let i = 0; i < allItems.length; i += 1) {
     cartIems.removeChild(allItems[i]);
   }
-}
+};
+
 window.onload = async () => {
  await callFetch();
  btnEvent();
