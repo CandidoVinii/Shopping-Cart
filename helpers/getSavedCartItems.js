@@ -1,5 +1,4 @@
 const getSavedCartItems = () => {
-  
 };
 
 if (typeof module !== 'undefined') {

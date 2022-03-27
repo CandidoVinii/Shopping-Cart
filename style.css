@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=BhuTuka+Expanded+One&family=Creepster&family=Tenor+Sans&family=Ubuntu:wght@300&display=swap');
+
 * {
   box-sizing: border-box;
   font-family: Epilogue, sans-serif;
   margin: 0;
   padding: 0;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 body {
@@ -127,6 +130,11 @@ body {
   color: white;
 }
 
+.item__add:hover {
+  background-color: rgb(249, 249, 246);
+  color: rgb(5, 52, 219);
+}
+
 .cart {
   display: flex;
   flex-basis: 32%;
@@ -147,3 +155,10 @@ body {
   border: 2px solid rgb(5, 52, 219);
   background-color: rgb(249, 249, 246);
 }
+
+.empty-cart:hover {
+  background-color: rgb(5, 52, 219);
+  color: white;
+  border-radius: 15px;
+}
+
