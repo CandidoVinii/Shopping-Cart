@@ -1,5 +1,5 @@
 const getCart = document.querySelector('.cart__items');
-const saveItems = document.querySelector('ol.cart__items')
+const saveItems = document.querySelector('ol.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
