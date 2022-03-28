@@ -1,11 +1,6 @@
 const getSavedCartItems = () => {
-  try {
-    const set = localStorage.getItem('cartItems');
-    const insertCart = document.querySelecto('.cart__items');
-    insertCart.innerHTML = set;
-  } catch (error) {
-    return error;
-  }
+  const loaded = localStorage.getItem('cartItems');
+  return loaded;
 };
 
 if (typeof module !== 'undefined') {
