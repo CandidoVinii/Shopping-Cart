@@ -1,11 +1,31 @@
 const getCart = document.querySelector('.cart__items');
+const button = document.querySelector('.empty-cart');
+const priceDiv = document.querySelector('.div-price');
+const priceValue = document.querySelector('total-price');
 
+
+// Deixa a mensagem de carregando enquanto espera a resposta da API
+const loading = () => {
+  const text = document.createElement('h1');
+  text.innerText = 'Carregando...';
+  text.className = 'loading';
+  const items = document.querySelector('.items');
+  items.appendChild(text);
+};
+
+// Remoove a mensagem quando a API traz os dados
+const remove = () => {
+  document.querySelector('.loading').remove();
+};
+
+// Cria a imagem do produto no HTML
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
 }
+
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -14,6 +34,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Carrega o produto na ttela principal
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -30,11 +51,12 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Ao clicar no item ele é removido do carrinho de compras
 function cartItemClickListener(event) {
   event.target.remove();
-  saveCartItems(saveItems.innerHTML);
 }
 
+// Ao clicar no button do produto ele replica no carrinho de compras como li
 function createCartItemElement({ sku, name, salePrice }) {
   const hr = document.createElement('hr');
   const li = document.createElement('li');
@@ -45,6 +67,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Pega os dados da API na função criada no fetchProducts e joga para a função createProductItemElement
 const callFetch = async () => {
   const items = document.querySelector('.items');
   const call = await fetchProducts('computador');
@@ -58,6 +81,7 @@ const callFetch = async () => {
   });
 };
 
+// função que pega os dados como o preço e joga para a função createCartItemElement
 const insertCart = async (event) => {
   const getIdProduct = event.target.parentElement.firstChild.innerHTML;
   response = await fetchItem(getIdProduct);
@@ -67,15 +91,15 @@ const insertCart = async (event) => {
     salePrice: response.price,
   };
   getCart.appendChild(createCartItemElement(info));
-  saveCartItems(saveItems.innerHTML);
 };
 
+// função de evento que ao clicar no adicionar carrinho chama o insert cart 
 const btnEvent = () => {
   const btn = document.querySelectorAll('.item__add');
   btn.forEach((element) => element.addEventListener('click', insertCart));
 };
 
-const button = document.querySelector('.empty-cart');
+// função que ao clicar no button de esvaziar o carrinho ele percorre e remove os itens
 const emptyCart = () => {
   const allItems = document.querySelectorAll('li');
   const cartIems = document.querySelector('ol');
@@ -84,18 +108,7 @@ const emptyCart = () => {
   }
 };
 
-const loading = () => {
-  const text = document.createElement('h1');
-  text.innerText = 'Carregando...';
-  text.className = 'loading';
-  const cart = document.querySelector('.cart__title');
-  cart.appendChild(text);
-};
-
-const remove = () => {
-  document.querySelector('.loading').remove();
-};
-
+// carrega as funções assincronas
 window.onload = async () => {
   loading();
   await callFetch();
