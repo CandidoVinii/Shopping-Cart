@@ -1,5 +1,4 @@
 const getCart = document.querySelector('.cart__items');
-const saveItems = document.querySelector('ol.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -85,8 +84,22 @@ const emptyCart = () => {
   }
 };
 
+const loading = () => {
+  const text = document.createElement('h1');
+  text.innerText = 'Carregando...';
+  text.className = 'loading';
+  const cart = document.querySelector('.cart__title');
+  cart.appendChild(text);
+};
+
+const remove = () => {
+  document.querySelector('.loading').remove();
+};
+
 window.onload = async () => {
- await callFetch();
- btnEvent();
- button.addEventListener('click', emptyCart);
+  loading();
+  await callFetch();
+  btnEvent();
+  button.addEventListener('click', emptyCart);
+  remove();
 };
