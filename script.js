@@ -16,6 +16,28 @@ const remove = () => {
   document.querySelector('.loading').remove();
 };
 
+const save = () => {
+  const saveAll = getCart.innerHTML;
+  saveCartItems(saveAll);
+};
+
+const load = () => {
+  const data = getSavedCartItems();
+  getCart.innerHTML = data;
+};
+
+const priceTotal = () => {
+  // https://www.w3schools.com/jsref/jsref_from.asp transforma em array qualquer objeto recebido.
+  const array = Array.from(document.querySelectorAll('.cart__item'));
+  const value = array.reduce((acc, curr) => {
+    // https://www.w3schools.com/jsref/jsref_number.asp Transforma o valor retornado em número, se o valor não puder ser retornado retorna NAN.
+    const price = Number(curr.innerText.split('PRICE: $')[1]);
+    return acc + price;
+  }, 0);
+  // https://www.w3schools.com/jsref/jsref_tofixed.asp metodo para arredondar o número em 2 casas decimais.
+  span.innerText = `Subtotal: R$${(value).toFixed(2)}`;
+};
+
 // Cria a imagem do produto no HTML
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -31,7 +53,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// Carrega o produto na ttela principal
+// Carrega o produto na tela principal
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -55,6 +77,7 @@ const callFetch = async () => {
       image: obj.thumbnail,
     };
     items.appendChild(createProductItemElement(catchInfo));
+    priceTotal();
   });
 };
 
@@ -65,7 +88,7 @@ function getSkuFromProductItem(item) {
 // Ao clicar no item ele é removido do carrinho de compras
 function cartItemClickListener(event) {
   event.target.remove();
-  saveCartItems(getCart.innerHTML);
+  priceTotal();
 }
 
 // Ao clicar no button do produto ele replica no carrinho de compras como li
@@ -87,17 +110,7 @@ const emptyCart = () => {
     cartIems.removeChild(allItems[i]);
   }
   localStorage.removeItem('cartItems');
-  span.innerText = 'Subtotal: 0';
-};
-
-const save = () => {
-  const saveAll = getCart.innerHTML;
-  saveCartItems(saveAll);
-};
-
-const load = () => {
-  const data = getSavedCartItems();
-  getCart.innerHTML = data;
+  span.innerText = 'Subtotal: R$0.00';
 };
 
 // função que pega os dados como o preço e joga para a função createCartItemElement
@@ -111,12 +124,23 @@ const insertCart = async (event) => {
   };
   getCart.appendChild(createCartItemElement(info));
   save();
+  priceTotal();
 };
 
 // função de evento que ao clicar no adicionar carrinho chama o insert cart 
 const btnEvent = () => {
   const btn = document.querySelectorAll('.item__add');
   btn.forEach((element) => element.addEventListener('click', insertCart));
+};
+
+// função que ao retornar o localstorage remove o bug de não conseguir apagar
+const removeItemCart = async () => {
+  const saved = await getSavedCartItems();
+  getCart.innerHTML = saved;
+  const li = document.querySelectorAll('.cart__item');
+  [...li].forEach((element) => {
+    element.addEventListener('click', cartItemClickListener);
+  });
 };
 
 // carrega as funções assincronas
@@ -126,5 +150,7 @@ window.onload = async () => {
   btnEvent();
   button.addEventListener('click', emptyCart);
   load();
+  priceTotal();
+  removeItemCart();
   remove();
 };
