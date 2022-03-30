@@ -77,7 +77,6 @@ const callFetch = async () => {
       image: obj.thumbnail,
     };
     items.appendChild(createProductItemElement(catchInfo));
-    priceTotal();
   });
 };
 
@@ -143,14 +142,14 @@ const removeItemCart = async () => {
   });
 };
 
+button.addEventListener('click', emptyCart);
+
 // carrega as funções assincronas
 window.onload = async () => {
   loading();
   await callFetch();
-  btnEvent();
-  button.addEventListener('click', emptyCart);
-  load();
-  await priceTotal();
-  removeItemCart();
   remove();
+  btnEvent();
+  load();
+  removeItemCart();
 };
