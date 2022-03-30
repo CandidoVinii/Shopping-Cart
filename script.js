@@ -26,9 +26,9 @@ const load = () => {
   getCart.innerHTML = data;
 };
 
-const priceTotal = () => {
+const priceTotal = async () => {
   // https://www.w3schools.com/jsref/jsref_from.asp transforma em array qualquer objeto recebido.
-  const array = Array.from(document.querySelectorAll('.cart__item'));
+  const array = await Array.from(document.querySelectorAll('.cart__item'));
   const value = array.reduce((acc, curr) => {
     // https://www.w3schools.com/jsref/jsref_number.asp Transforma o valor retornado em número, se o valor não puder ser retornado retorna NAN.
     const price = Number(curr.innerText.split('PRICE: $')[1]);
@@ -150,7 +150,7 @@ window.onload = async () => {
   btnEvent();
   button.addEventListener('click', emptyCart);
   load();
-  priceTotal();
+  await priceTotal();
   removeItemCart();
   remove();
 };
