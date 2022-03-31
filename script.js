@@ -2,9 +2,9 @@ const getCart = document.querySelector('.cart__items');
 const button = document.querySelector('.empty-cart');
 const span = document.querySelector('.total-price');
 
-const priceTotal = async () => {
+const priceTotal = () => {
   // https://www.w3schools.com/jsref/jsref_from.asp transforma em array qualquer objeto recebido.
-  const array = await Array.from(document.querySelectorAll('.cart__item'));
+  const array = Array.from(document.querySelectorAll('.cart__item'));
   const value = array.reduce((acc, curr) => {
     // https://www.w3schools.com/jsref/jsref_number.asp Transforma o valor retornado em número, se o valor não puder ser retornado retorna NAN.
     const price = Number(curr.innerText.split('PRICE: $')[1]);
@@ -12,32 +12,6 @@ const priceTotal = async () => {
   }, 0);
   // https://www.w3schools.com/jsref/jsref_tofixed.asp metodo para arredondar o número em 2 casas decimais.
   span.innerText = `Subtotal: R$${(value).toFixed(2)}`;
-};
-
-// Deixa a mensagem de carregando enquanto espera a resposta da API
-const loading = () => {
-  const text = document.createElement('h1');
-  text.innerText = 'Carregando...';
-  text.className = 'loading';
-  const items = document.querySelector('.items');
-  items.appendChild(text);
-};
-
-// Remoove a mensagem quando a API traz os dados
-const remove = () => {
-  document.querySelector('.loading').remove();
-};
-
-const save = () => {
-  const saveAll = getCart.innerHTML;
-  saveCartItems(saveAll);
-  priceTotal();
-};
-
-const load = async () => {
-  const data = await getSavedCartItems();
-  getCart.innerHTML = data;
-  await priceTotal();
 };
 
 // Cria a imagem do produto no HTML
@@ -114,6 +88,45 @@ const emptyCart = () => {
   span.innerText = 'Subtotal: R$0.00';
 };
 
+// função que ao retornar o localstorage remove o bug de não conseguir apagar
+const removeItemCart = async () => {
+  const saved = await getSavedCartItems();
+  getCart.innerHTML = saved;
+  const li = document.querySelectorAll('.cart__item');
+  [...li].forEach((element) => {
+    element.addEventListener('click', cartItemClickListener);
+  });
+};
+
+// Deixa a mensagem de carregando enquanto espera a resposta da API
+const loading = () => {
+  const text = document.createElement('h1');
+  text.innerText = 'Carregando...';
+  text.className = 'loading';
+  const items = document.querySelector('.items');
+  items.appendChild(text);
+};
+
+// Remove a mensagem quando a API traz os dados
+const remove = () => {
+  document.querySelector('.loading').remove();
+};
+
+const save = () => {
+  const saveLi = getCart.innerHTML;
+  saveCartItems(saveLi);
+};
+
+const load = () => {
+  const data = getSavedCartItems();
+  getCart.innerHTML = data;
+  priceTotal();
+};
+
+function empty() {
+  button.addEventListener('click', emptyCart);
+}
+
 // função que pega os dados como o preço e joga para a função createCartItemElement
 const insertCart = async (event) => {
   const getIdProduct = event.target.parentElement.firstChild.innerHTML;
@@ -134,23 +147,12 @@ const btnEvent = () => {
   btn.forEach((element) => element.addEventListener('click', insertCart));
 };
 
-// função que ao retornar o localstorage remove o bug de não conseguir apagar
-const removeItemCart = async () => {
-  const saved = await getSavedCartItems();
-  getCart.innerHTML = saved;
-  const li = document.querySelectorAll('.cart__item');
-  [...li].forEach((element) => {
-    element.addEventListener('click', cartItemClickListener);
-  });
-};
-
-button.addEventListener('click', emptyCart);
-
 // carrega as funções assincronas
 window.onload = async () => {
   loading();
   await callFetch();
   remove();
+  empty();
   btnEvent();
   load();
   removeItemCart();
