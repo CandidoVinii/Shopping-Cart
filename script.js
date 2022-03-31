@@ -2,6 +2,18 @@ const getCart = document.querySelector('.cart__items');
 const button = document.querySelector('.empty-cart');
 const span = document.querySelector('.total-price');
 
+const priceTotal = async () => {
+  // https://www.w3schools.com/jsref/jsref_from.asp transforma em array qualquer objeto recebido.
+  const array = await Array.from(document.querySelectorAll('.cart__item'));
+  const value = array.reduce((acc, curr) => {
+    // https://www.w3schools.com/jsref/jsref_number.asp Transforma o valor retornado em número, se o valor não puder ser retornado retorna NAN.
+    const price = Number(curr.innerText.split('PRICE: $')[1]);
+    return acc + price;
+  }, 0);
+  // https://www.w3schools.com/jsref/jsref_tofixed.asp metodo para arredondar o número em 2 casas decimais.
+  span.innerText = `Subtotal: R$${(value).toFixed(2)}`;
+};
+
 // Deixa a mensagem de carregando enquanto espera a resposta da API
 const loading = () => {
   const text = document.createElement('h1');
@@ -19,23 +31,13 @@ const remove = () => {
 const save = () => {
   const saveAll = getCart.innerHTML;
   saveCartItems(saveAll);
+  priceTotal();
 };
 
-const load = () => {
-  const data = getSavedCartItems();
+const load = async () => {
+  const data = await getSavedCartItems();
   getCart.innerHTML = data;
-};
-
-const priceTotal = async () => {
-  // https://www.w3schools.com/jsref/jsref_from.asp transforma em array qualquer objeto recebido.
-  const array = await Array.from(document.querySelectorAll('.cart__item'));
-  const value = array.reduce((acc, curr) => {
-    // https://www.w3schools.com/jsref/jsref_number.asp Transforma o valor retornado em número, se o valor não puder ser retornado retorna NAN.
-    const price = Number(curr.innerText.split('PRICE: $')[1]);
-    return acc + price;
-  }, 0);
-  // https://www.w3schools.com/jsref/jsref_tofixed.asp metodo para arredondar o número em 2 casas decimais.
-  span.innerText = `Subtotal: R$${(value).toFixed(2)}`;
+  await priceTotal();
 };
 
 // Cria a imagem do produto no HTML
